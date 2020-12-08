@@ -11,6 +11,10 @@
 
     &.large {
         height: 380px;
+        
+        @media screen and (max-width: 800px) {
+            height: 200px;
+        }
     }
 
     &:first-child {
