@@ -15,7 +15,7 @@ import { checkUserSession } from './redux/user/user-actions';
 const HomePage = lazy(() => import('./pages/homepage/homepage.component'));
 const ShopPage = lazy(() => import('./pages/shop/shop.component'));
 const SignInAndSignUpPage = lazy(() => import('./pages/sign-in-and-sign-up/sign-in-and-sign-up.component'));
-const CheckoutPage = lazy(() => ('./pages/checkout/checkout.component'));
+const CheckoutPage = lazy(() => import('./pages/checkout/checkout.component'));
 
 const App = ({ checkUserSession, currentUser }) => {
   useEffect(() => {checkUserSession()}, [checkUserSession]);

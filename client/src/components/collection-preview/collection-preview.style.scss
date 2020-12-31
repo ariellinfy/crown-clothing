@@ -4,18 +4,20 @@
     margin-bottom: 30px;
   
     .title {
-      font-size: 28px;
+      font-size: 32px;
       margin-bottom: 25px;
+      text-align: center;
     }
   
     .preview {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-evenly;
+      gap: 10px;
       
+
       @media screen and (max-width: 800px) {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        width: auto;
+        flex-wrap: wrap;
       }
     }
 

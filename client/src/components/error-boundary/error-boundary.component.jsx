@@ -1,11 +1,9 @@
 import React from 'react';
-
 import { ErrorImageOverlay, ErrorImageContainer, ErrorImageText } from './error-boundary.style';
 
 class ErrorBoundary extends React.Component {
-    constructor() {
-        super();
-
+    constructor(props) {
+        super(props);
         this.state = {
             hasError: false
         };
