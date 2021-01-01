@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
+import { clearCart } from '../../redux/cart/cart-actions';
 
-const StripeCheckoutButton = ({ price }) => {
+const StripeCheckoutButton = ({ price, clearCart }) => {
     const priceForStripe = price * 100;
     const publishableKey = 'pk_test_51HswVAGcjWkKj6KQxgwu96VFgUNZSWhbx0mpTj0ojFWhTirOL1wcs30PZdOGdgq879ftZlssoHSSiQO3v7gAij4T00fBkcPPpO';
 
@@ -15,6 +17,7 @@ const StripeCheckoutButton = ({ price }) => {
                 token
             }
         }).then(response => {
+            clearCart();
             alert('Successful payment');
         }).catch(error => {
             console.log('Payment error: ', error);
@@ -28,7 +31,6 @@ const StripeCheckoutButton = ({ price }) => {
             name='CRWN Clothing Ltd.'
             billingAddress
             shippingAddress
-            // image='https://svgshare.com/i/CUz'
             description={`Your total is $${price}`}
             amount={priceForStripe}
             panelLabel='Pay Now'
@@ -38,4 +40,8 @@ const StripeCheckoutButton = ({ price }) => {
     );
 };
 
-export default StripeCheckoutButton;
+const mapDispatchToProps = dispatch => ({
+    clearCart: () => dispatch(clearCart())
+});
+
+export default connect(null, mapDispatchToProps)(StripeCheckoutButton);

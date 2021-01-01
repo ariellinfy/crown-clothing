@@ -26,6 +26,7 @@ export const createUserProfileDocument = async(userAuth, additionalData) => {
                 displayName: displayName,
                 email: email,
                 createdAt: createdAt,
+                cartItems: [],
                 ...additionalData
             })
         } catch (error) {

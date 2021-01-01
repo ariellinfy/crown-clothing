@@ -1,7 +1,7 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
-import { auth, googleProvider, createUserProfileDocument, getCurrentUser } from '../../firebase/firebase.utils';
+import { auth, firestore, googleProvider, createUserProfileDocument, getCurrentUser } from '../../firebase/firebase.utils';
 import UserActionTypes from './user-types';
-import { signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure } from './user-actions';
+import { signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpSuccess, signUpFailure, reSignInStart, reSignInSuccess, reSignInFailure } from './user-actions';
 
 export function* getSnapshotFromUserAuth(userAuth, additionalData) {
     try {
@@ -10,6 +10,16 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
         yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
     } catch (error) {
         yield put(signInFailure(error));
+    }
+}
+
+export function* reSignInGetSnapshotFromUserAuth(userAuth) {
+    try {
+        const userRef = yield call(createUserProfileDocument, userAuth);
+        const userSnapshot = yield userRef.get();
+        yield put(reSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    } catch (error) {
+        yield put(reSignInFailure(error));
     }
 }
 
@@ -48,18 +58,16 @@ export function* signInWithEmail({payload: { email, password }}) {
     }
 } 
 
-export function* isUserAuthenticated() {
+export function* signOut({ payload: { cartItems, currentUser } }) {
     try {
-        const userAuth = yield getCurrentUser();
-        if (!userAuth) return;
-        yield getSnapshotFromUserAuth(userAuth);
-    } catch (error) {
-        yield put(signInFailure(error));
-    }
-}
-
-export function* signOut() {
-    try {
+        const userRef = firestore.doc(`users/${currentUser.id}`);
+        try {
+            yield userRef.set({
+                ...currentUser,
+                cartItems: cartItems,
+        })} catch (error) {
+            yield console.log('error updating user cart');
+        }
         yield auth.signOut();
         yield put(signOutSuccess());
     } catch (error) {
@@ -67,8 +75,22 @@ export function* signOut() {
     }
 }
 
-export function* onCheckUserSession() {
-    yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
+export function* reSignIn({ payload }) {
+    try {
+        yield reSignInGetSnapshotFromUserAuth(payload);
+    } catch (error) {
+        yield put(reSignInFailure(error));
+    }
+}
+
+export function* isUserAuthenticated() {
+    try {
+        const userAuth = yield getCurrentUser();
+        if (!userAuth) return;
+        yield put(reSignInStart(userAuth));
+    } catch (error) {
+        yield put(reSignInFailure(error));
+    }
 }
 
 export function* onSignUpSuccess() {
@@ -91,13 +113,22 @@ export function* onSignOutStart() {
     yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
+export function* onReSignInStart() {
+    yield takeLatest(UserActionTypes.RE_SIGN_IN_START, reSignIn);
+}
+
+export function* onCheckUserSession() {
+    yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticated);
+}
+
 export function* userSagas() {
     yield all([
         call(onSignUpStart),
         call(onSignUpSuccess),
         call(onGoogleSignInStart),
         call(onEmailSignInStart),
+        call(onSignOutStart),
         call(onCheckUserSession),
-        call(onSignOutStart)
+        call(onReSignInStart)
     ]);
 }
