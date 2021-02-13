@@ -72,6 +72,35 @@ export const getCurrentUser = () => {
     })
 }
 
+export const createContactMessageDocument = async(userMessage) => {
+    if(!userMessage) return;
+    const postId = firestoreAutoId();
+    const contactRef = firestore.collection('contact').doc(`${postId}`);
+    const { payload: { name, email, message } } = userMessage;
+    const receivedAt = new Date();
+    try {
+        await contactRef.set({
+            name: name,
+            email: email,
+            message: message,
+            receivedAt: receivedAt
+        })
+    } catch (error) {
+        console.log('error creating contact document', error.message);
+    }
+};
+
+export const firestoreAutoId = () => {
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let autoId = '';
+    for (let i = 0; i < 20; i++) {
+      autoId += CHARS.charAt(
+        Math.floor(Math.random() * CHARS.length)
+      )
+    }
+    return autoId;
+}
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 

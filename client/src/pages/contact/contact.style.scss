@@ -1,0 +1,39 @@
+.contact-page {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+
+  .title {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .contact-form {
+    width: 25em;
+  }
+
+  .more-contact {
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    .option {
+      padding: 0.1em;
+      display: flex;
+
+      .icon {
+        padding: 0.5em;
+      }
+      .block {
+        display: block;
+        padding: 0.5em;
+      }
+    }
+  }
+}
