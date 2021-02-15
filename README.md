@@ -1,6 +1,6 @@
 # Crown Clothing - E-Commerce Website (Full-Stack)
 
-![Crwn Cover](client/public/crwn-cover.png)
+![Crwn Cover](client/public/app-cover.png)
 
 ## About
 
