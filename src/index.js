@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 
@@ -13,8 +13,8 @@ import { stripePromise } from "./utils/stripe/stripe.utils";
 import "./index.scss";
 
 const rootElement = document.getElementById("root");
-
-render(
+const root = createRoot(rootElement);
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
@@ -27,6 +27,5 @@ render(
         </CategoriesProvider>
       </UserProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  rootElement
+  </React.StrictMode>
 );
