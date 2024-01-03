@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-import { CartContext } from "../../contexts/cart.context";
-import { UserContext } from "../../contexts/user.context";
+import { selectCartTotal } from "../../store/cart/cart.selector";
+import { selectCurrentUser } from "../../store/user/user.selector";
 
 import {
   PaymentButton,
@@ -14,8 +15,8 @@ import { BUTTON_TYPE_CLASSES } from "../button/button.component";
 const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const { currentUser } = useContext(UserContext);
-  const { cartTotal } = useContext(CartContext);
+  const amount = useSelector(selectCartTotal);
+  const currentUser = useSelector(selectCurrentUser);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const paymentHandler = async (e) => {
@@ -29,7 +30,7 @@ const PaymentForm = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount: cartTotal * 100 }),
+      body: JSON.stringify({ amount: amount * 100 }),
     }).then((res) => {
       return res.json();
     });
