@@ -12,7 +12,8 @@
     "react-router-dom": "^6.21.1",
     "react-scripts": "^5.0.1",
     "sass": "^1.69.6",
-    "stripe": "^14.10.0"
+    "stripe": "^14.10.0",
+    "styled-components": "^6.1.6"
   },
   "scripts": {
     "start": "react-scripts start",
